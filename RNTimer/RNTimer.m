@@ -29,7 +29,7 @@
 
 @interface RNTimer ()
 @property (nonatomic, readwrite, copy) dispatch_block_t block;
-@property (nonatomic, readwrite, assign) dispatch_source_t source;
+@property (nonatomic, readwrite, strong) dispatch_source_t source;
 @end
 
 @implementation RNTimer
@@ -58,7 +58,9 @@
 - (void)invalidate {
   if (self.source) {
     dispatch_source_cancel(self.source);
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0
     dispatch_release(self.source);
+#endif
     self.source = nil;
   }
   self.block = nil;
